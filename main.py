@@ -4,10 +4,10 @@ import hashlib
 import sqlite3
 import uuid
 
+import httpx
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
-import httpx
 
 
 DB = os.getenv("DB_PATH", "orders.db")
@@ -28,28 +28,18 @@ VARIZA_RETURN_URL = os.getenv(
 VARIZA_API = "https://variza.ir/api/v1/pay"
 
 
-FOLLOWER_TIERS = {
-    10_000: 40_000,
-    20_000: 75_000,
-    30_000: 105_000,
-    50_000: 160_000,
-    100_000: 260_000,
-    150_000: 320_000,
-    200_000: 350_000,
-    250_000: 375_000,
-    300_000: 390_000,
-    330_000: 400_000,
+FOLLOWER_PRICES = {
+    10000: 40000,
+    20000: 75000,
+    30000: 105000,
+    50000: 160000,
+    100000: 260000,
+    150000: 320000,
+    200000: 350000,
+    250000: 375000,
+    300000: 390000,
+    330000: 400000
 }
-
-
-def follower_price(quantity: int) -> int:
-    if quantity not in FOLLOWER_TIERS:
-        raise ValueError(
-            "تعداد فالوور باید یکی از بسته‌های 10K، 20K، 30K، "
-            "50K، 100K، 150K، 200K، 250K، 300K یا 330K باشد."
-        )
-
-    return FOLLOWER_TIERS[quantity]
 
 
 app = FastAPI(title="PORIY SERVICES API")
@@ -58,7 +48,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
     allow_methods=["*"],
-    allow_headers=["*"],
+    allow_headers=["*"]
 )
 
 
@@ -72,7 +62,7 @@ def init_db():
     conn = db()
 
     conn.execute("""
-        CREATE TABLE IF NOT EXISTS orders(
+        CREATE TABLE IF NOT EXISTS orders (
             id TEXT PRIMARY KEY,
             service TEXT NOT NULL,
             target TEXT NOT NULL,
@@ -87,7 +77,7 @@ def init_db():
     """)
 
     conn.execute("""
-        CREATE TABLE IF NOT EXISTS inventory(
+        CREATE TABLE IF NOT EXISTS inventory (
             service TEXT PRIMARY KEY,
             total INTEGER NOT NULL,
             next_position INTEGER NOT NULL
@@ -98,7 +88,7 @@ def init_db():
         INSERT OR IGNORE INTO inventory
         (service, total, next_position)
         VALUES (?, ?, ?)
-    """, ("followers", 330_000, 0))
+    """, ("follower", 320000, 0))
 
     conn.commit()
     conn.close()
@@ -114,6 +104,13 @@ class OrderIn(BaseModel):
     phone: str | None = None
 
 
+def get_follower_price(quantity: int):
+    if quantity not in FOLLOWER_PRICES:
+        raise ValueError("بسته انتخاب‌شده معتبر نیست.")
+
+    return FOLLOWER_PRICES[quantity]
+
+
 def reserve_followers(quantity: int):
     conn = db()
 
@@ -126,25 +123,24 @@ def reserve_followers(quantity: int):
             FROM inventory
             WHERE service = ?
             """,
-            ("followers",)
+            ("follower",)
         ).fetchone()
 
         if not row:
-            raise ValueError("موجودی فالوور تعریف نشده است.")
+            raise ValueError("موجودی فالوور پیدا نشد.")
 
         total = int(row["total"])
         current = int(row["next_position"])
 
-        if current >= total:
-            raise ValueError("موجودی فالوور تمام شده است.")
+        remaining = total - current
 
-        end = current + quantity
-
-        if end > total:
-            remaining = total - current
+        if quantity > remaining:
             raise ValueError(
-                f"موجودی کافی نیست؛ موجودی باقی‌مانده: {remaining:,}"
+                f"موجودی کافی نیست. موجودی باقی‌مانده: {remaining:,}"
             )
+
+        start = current
+        end = current + quantity
 
         conn.execute(
             """
@@ -152,12 +148,12 @@ def reserve_followers(quantity: int):
             SET next_position = ?
             WHERE service = ?
             """,
-            (end, "followers")
+            (end, "follower")
         )
 
         conn.commit()
 
-        return current, end
+        return start, end
 
     except Exception:
         conn.rollback()
@@ -170,8 +166,7 @@ def reserve_followers(quantity: int):
 @app.get("/api/health")
 def health():
     return {
-        "ok": True,
-        "service": "PORIY SERVICES"
+        "ok": True
     }
 
 
@@ -181,11 +176,12 @@ async def create_order(order: OrderIn):
     if order.service != "followers":
         raise HTTPException(
             status_code=400,
-            detail="این سرویس هنوز فعال نشده است."
+            detail="این سرویس فعلاً فعال نیست."
         )
 
     try:
-        amount = follower_price(order.quantity)
+        amount = get_follower_price(order.quantity)
+
     except ValueError as e:
         raise HTTPException(
             status_code=400,
@@ -195,13 +191,14 @@ async def create_order(order: OrderIn):
     if not VARIZA_API_KEY:
         raise HTTPException(
             status_code=500,
-            detail="VARIZA_API_KEY تنظیم نشده است."
+            detail="کلید API واریزا در Render تنظیم نشده است."
         )
 
     try:
         reserved_from, reserved_to = reserve_followers(
             order.quantity
         )
+
     except ValueError as e:
         raise HTTPException(
             status_code=400,
@@ -214,8 +211,7 @@ async def create_order(order: OrderIn):
 
     conn.execute(
         """
-        INSERT INTO orders
-        (
+        INSERT INTO orders (
             id,
             service,
             target,
@@ -285,7 +281,7 @@ async def create_order(order: OrderIn):
 
             raise HTTPException(
                 status_code=502,
-                detail="واریزا نتوانست لینک پرداخت ایجاد کند."
+                detail="واریزا لینک پرداخت را ایجاد نکرد."
             )
 
         data = response.json()
@@ -296,7 +292,7 @@ async def create_order(order: OrderIn):
         if not payment_slug or not pay_url:
 
             print(
-                "INVALID VARIZA RESPONSE:",
+                "VARIZA INVALID RESPONSE:",
                 data
             )
 
@@ -366,7 +362,7 @@ async def create_order(order: OrderIn):
 
         raise HTTPException(
             status_code=502,
-            detail="خطا هنگام اتصال به واریزا."
+            detail="خطا در اتصال به واریزا."
         )
 
 
@@ -383,13 +379,13 @@ async def variza_webhook(request: Request):
     if not VARIZA_WEBHOOK_SECRET:
         raise HTTPException(
             status_code=500,
-            detail="VARIZA_WEBHOOK_SECRET تنظیم نشده است."
+            detail="Webhook Secret تنظیم نشده است."
         )
 
     if not signature:
         raise HTTPException(
             status_code=400,
-            detail="Webhook signature missing"
+            detail="signature missing"
         )
 
     expected = (
@@ -407,7 +403,7 @@ async def variza_webhook(request: Request):
     ):
         raise HTTPException(
             status_code=400,
-            detail="Webhook signature invalid"
+            detail="invalid signature"
         )
 
     try:
@@ -416,19 +412,25 @@ async def variza_webhook(request: Request):
     except Exception:
         raise HTTPException(
             status_code=400,
-            detail="Invalid JSON"
+            detail="invalid json"
         )
 
     if data.get("event") != "payment.paid":
-        return {"ok": True}
+        return {
+            "ok": True
+        }
 
     if data.get("status") != "paid":
-        return {"ok": True}
+        return {
+            "ok": True
+        }
 
     slug = data.get("slug")
 
     if not slug:
-        return {"ok": True}
+        return {
+            "ok": True
+        }
 
     try:
         paid_amount = int(
@@ -441,7 +443,7 @@ async def variza_webhook(request: Request):
     except Exception:
         raise HTTPException(
             status_code=400,
-            detail="Invalid payment amount"
+            detail="invalid amount"
         )
 
     conn = db()
@@ -457,18 +459,24 @@ async def variza_webhook(request: Request):
 
     if not order:
         conn.close()
-        return {"ok": True}
+
+        return {
+            "ok": True
+        }
 
     if order["status"] == "paid":
         conn.close()
-        return {"ok": True}
+
+        return {
+            "ok": True
+        }
 
     if paid_amount < int(order["amount"]):
         conn.close()
 
         raise HTTPException(
             status_code=400,
-            detail="مبلغ پرداختی کمتر از مبلغ سفارش است."
+            detail="amount mismatch"
         )
 
     conn.execute(
