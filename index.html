@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#6d4aff">
+<title>PORIY SERVICES | خدمات روبیکا</title>
+<style>
+:root{
+ --bg:#f6f7fb;--card:#fff;--text:#171827;--muted:#74778a;--line:#ececf3;
+ --primary:#6d4aff;--primary2:#8d72ff;--soft:#f0edff;--green:#18a66a;
+ --shadow:0 10px 30px rgba(34,29,77,.08);--radius:20px
+}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Tahoma,Arial,sans-serif}
+button,input{font:inherit}button{cursor:pointer;border:0}
+.app{max-width:620px;margin:auto;min-height:100vh;padding-bottom:92px}
+header{position:sticky;top:0;z-index:20;background:rgba(246,247,251,.92);backdrop-filter:blur(14px);padding:14px 16px 10px;border-bottom:1px solid rgba(236,236,243,.8)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px}.brand{display:flex;align-items:center;gap:10px}
+.logo{width:44px;height:44px;border-radius:15px;background:linear-gradient(135deg,var(--primary),#a68fff);display:grid;place-items:center;color:#fff;font-size:22px;font-weight:900;box-shadow:0 8px 20px rgba(109,74,255,.25)}
+.brand b{display:block;font-size:16px}.brand small{color:var(--muted);font-size:11px}
+.iconbtn{width:42px;height:42px;border-radius:14px;background:#fff;color:var(--text);box-shadow:var(--shadow);font-size:20px}
+main{padding:16px}.hero{background:linear-gradient(135deg,#5f3df2,#9277ff);color:#fff;border-radius:26px;padding:22px;box-shadow:0 15px 35px rgba(109,74,255,.22);position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;width:170px;height:170px;border-radius:50%;background:rgba(255,255,255,.1);left:-50px;top:-60px}
+.hero h1{font-size:23px;margin:0 0 9px}.hero p{margin:0 0 17px;color:#eee9ff;line-height:1.8;font-size:13px}
+.hero .trust{display:flex;gap:8px;flex-wrap:wrap}.pill{background:rgba(255,255,255,.15);padding:8px 10px;border-radius:12px;font-size:11px}
+.section{margin-top:22px}.sectionhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}.sectionhead h2{font-size:17px;margin:0}.sectionhead span{font-size:11px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.service{background:var(--card);border:1px solid var(--line);border-radius:19px;padding:15px;box-shadow:var(--shadow);text-align:right;transition:.15s}.service:active{transform:scale(.98)}
+.service .ico{width:43px;height:43px;border-radius:14px;background:var(--soft);display:grid;place-items:center;font-size:21px;margin-bottom:11px}.service b{font-size:14px}.service p{margin:6px 0 0;color:var(--muted);font-size:10px;line-height:1.6}
+.badge{display:inline-block;background:#e9f9f1;color:var(--green);padding:5px 7px;border-radius:9px;font-size:9px;margin-top:9px}
+.box{background:#fff;border:1px solid var(--line);border-radius:20px;padding:15px;box-shadow:var(--shadow)}
+.options{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.option{background:#fafaff;border:1px solid var(--line);border-radius:14px;padding:11px 6px;text-align:center}.option.active{border-color:var(--primary);background:var(--soft);color:var(--primary);font-weight:700}.option small{display:block;color:var(--muted);font-size:9px;margin-top:4px}.option.active small{color:var(--primary)}
+label{display:block;font-size:11px;color:var(--muted);margin:14px 0 7px}input{width:100%;border:1px solid var(--line);background:#fafaff;border-radius:14px;padding:13px;outline:none}input:focus{border-color:var(--primary)}
+.price{display:flex;justify-content:space-between;align-items:center;background:#f8f7ff;border-radius:15px;padding:13px;margin-top:13px}.price span{color:var(--muted);font-size:11px}.price b{font-size:18px;color:var(--primary)}
+.primary{width:100%;background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;border-radius:15px;padding:14px;margin-top:11px;font-weight:700;box-shadow:0 9px 20px rgba(109,74,255,.2)}
+.secondary{width:100%;background:#f2f1f8;color:var(--text);border-radius:15px;padding:13px;margin-top:9px;font-weight:700}
+.orders-empty{text-align:center;color:var(--muted);padding:24px 8px;font-size:12px}.order{border:1px solid var(--line);border-radius:15px;padding:13px;margin-bottom:9px}.order strong{font-size:12px}.order small{display:block;color:var(--muted);margin-top:5px}
+.bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(620px,100%);padding:9px 12px calc(9px + env(safe-area-inset-bottom));background:rgba(255,255,255,.94);backdrop-filter:blur(15px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);z-index:30}.nav{background:transparent;color:var(--muted);padding:6px 2px;font-size:10px}.nav span{display:block;font-size:19px;margin-bottom:3px}.nav.active{color:var(--primary);font-weight:700}
+.page{display:none}.page.active{display:block}.toast{position:fixed;bottom:92px;left:50%;transform:translateX(-50%);background:#181824;color:#fff;padding:11px 15px;border-radius:13px;font-size:11px;display:none;z-index:50;max-width:90%;text-align:center}
+.drawer{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:60;display:none}.drawer.open{display:block}.drawerbox{position:absolute;right:0;top:0;height:100%;width:min(320px,88%);background:#fff;padding:20px;box-shadow:-10px 0 30px rgba(0,0,0,.15)}.drawerhead{display:flex;justify-content:space-between;align-items:center}.menuitem{width:100%;text-align:right;background:#f8f8fb;padding:13px;border-radius:14px;margin-top:9px;color:var(--text)}
+@media(min-width:560px){main{padding:20px}.hero{padding:28px}.grid{grid-template-columns:repeat(4,1fr)}.options{grid-template-columns:repeat(5,1fr)}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+ <div class="top">
+  <div class="brand"><div class="logo">P</div><div><b>PORIY SERVICES</b><small>خدمات حرفه‌ای روبیکا</small></div></div>
+  <button class="iconbtn" onclick="openDrawer()">☰</button>
+ </div>
+</header>
+
+<main>
+<section id="home" class="page active">
+ <div class="hero">
+  <h1>خدمات روبیکا، ساده و سریع ⚡</h1>
+  <p>سرویس موردنظرت رو انتخاب کن، تعداد رو بزن و سفارشت رو ثبت کن.</p>
+  <div class="trust"><span class="pill">⚡ ثبت سفارش سریع</span><span class="pill">🔒 پرداخت امن</span><span class="pill">📦 پیگیری سفارش</span></div>
+ </div>
+
+ <div class="section"><div class="sectionhead"><h2>خدمات</h2><span>انتخاب کنید</span></div>
+  <div class="grid">
+   <button class="service" onclick="selectService('followers')"><div class="ico">👤</div><b>فالوور روبینو</b><p>انتخاب تعداد آماده</p><span class="badge">پرفروش</span></button>
+   <button class="service" onclick="selectService('members')"><div class="ico">👥</div><b>ممبر گپ</b><p>بسته‌های آماده ممبر</p><span class="badge">سریع</span></button>
+   <button class="service" onclick="selectService('views')"><div class="ico">👁</div><b>بازدید</b><p>بسته‌های آماده بازدید</p></button>
+   <button class="service" onclick="selectService('reactions')"><div class="ico">❤️</div><b>ری‌اکشن</b><p>انتخاب بسته و سفارش</p></button>
+  </div>
+ </div>
+</section>
+
+<section id="services" class="page">
+ <div class="sectionhead"><h2>انتخاب سرویس</h2><span>مرحله ۱</span></div>
+ <div class="box">
+  <b id="serviceTitle">فالوور روبینو</b>
+  <div class="section" style="margin-top:15px"><div class="options" id="options"></div></div>
+  <label>لینک / آیدی مقصد</label>
+  <input id="target" placeholder="لینک یا آیدی مقصد را وارد کنید">
+  <div class="price"><span>مبلغ سفارش</span><b id="price">—</b></div>
+  <button class="primary" onclick="addOrder()">افزودن به سفارش</button>
+ </div>
+</section>
+
+<section id="orders" class="page">
+ <div class="sectionhead"><h2>سفارش‌های من</h2><span>پیگیری</span></div>
+ <div class="box" id="ordersBox"><div class="orders-empty">هنوز سفارشی ثبت نکرده‌اید.</div></div>
+</section>
+
+<section id="account" class="page">
+ <div class="sectionhead"><h2>حساب و پشتیبانی</h2></div>
+ <div class="box">
+  <button class="menuitem" onclick="showToast('برای پیگیری، کد سفارش را در بخش سفارش‌ها وارد کنید.')">📦 پیگیری سفارش</button>
+  <button class="menuitem" onclick="showToast('پشتیبانی را از طریق آیدی اعلام‌شده در سایت انجام دهید.')">💬 پشتیبانی</button>
+  <button class="menuitem" onclick="showToast('قوانین سفارش و پرداخت در حال آماده‌سازی است.')">📄 قوانین</button>
+  <button class="menuitem" onclick="showToast('پرداخت پس از اتصال Variza فعال می‌شود.')">💳 روش پرداخت</button>
+ </div>
+</section>
+</main>
+
+<nav class="bottom">
+ <button class="nav active" data-page="home" onclick="go('home',this)"><span>⌂</span>خانه</button>
+ <button class="nav" data-page="services" onclick="go('services',this)"><span>🛒</span>خدمات</button>
+ <button class="nav" data-page="orders" onclick="go('orders',this)"><span>📦</span>سفارش‌ها</button>
+ <button class="nav" data-page="account" onclick="go('account',this)"><span>☻</span>حساب</button>
+</nav>
+</div>
+
+<div class="drawer" id="drawer" onclick="if(event.target===this)closeDrawer()"><div class="drawerbox">
+ <div class="drawerhead"><b>منوی سایت</b><button class="iconbtn" onclick="closeDrawer()">×</button></div>
+ <button class="menuitem" onclick="go('home');closeDrawer()">🏠 صفحه اصلی</button>
+ <button class="menuitem" onclick="go('services');closeDrawer()">🛒 همه خدمات</button>
+ <button class="menuitem" onclick="go('orders');closeDrawer()">📦 پیگیری سفارش‌ها</button>
+ <button class="menuitem" onclick="go('account');closeDrawer()">💬 پشتیبانی</button>
+ <button class="menuitem" onclick="showToast('قوانین سفارش در حال آماده‌سازی است.');closeDrawer()">📄 قوانین و سوالات متداول</button>
+</div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const API="https://poriy-rubika.onrender.com";
+const prices={
+ followers:{title:"فالوور روبینو",vals:[10000,20000,30000,50000,100000,150000,200000,250000,300000,330000],
+ prices:[40000,75000,105000,160000,260000,320000,350000,375000,390000,400000]},
+ members:{title:"ممبر گپ",vals:[1000,5000,10000,20000,50000],prices:[0,0,0,0,0]},
+ views:{title:"بازدید",vals:[1000,5000,10000,20000,50000],prices:[0,0,0,0,0]},
+ reactions:{title:"ری‌اکشن",vals:[1000,5000,10000,20000,50000],prices:[0,0,0,0,0]}
+};
+let current="followers",selected=0;
+function go(id,btn){
+ document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');
+ document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));
+ const b=btn||document.querySelector('.nav[data-page="'+id+'"]');if(b)b.classList.add('active');window.scrollTo(0,0);
+}
+function selectService(s){current=s;selected=0;renderOptions();go('services')}
+function renderOptions(){
+ const d=prices[current];document.getElementById('serviceTitle').textContent=d.title;
+ document.getElementById('options').innerHTML=d.vals.map((v,i)=>`<button class="option ${i===selected?'active':''}" onclick="pick(${i})">${fmt(v)}<small>${d.prices[i]?money(d.prices[i]):'قیمت بزودی'}</small></button>`).join('');
+ updatePrice();
+}
+function pick(i){selected=i;renderOptions()}
+function updatePrice(){const p=prices[current].prices[selected];document.getElementById('price').textContent=p?money(p):'بزودی'}
+function fmt(n){return n>=1000?(n/1000)+'K':n}
+function money(n){return new Intl.NumberFormat('fa-IR').format(n)+' تومان'}
+async function addOrder(){
+ const d=prices[current],qty=d.vals[selected],target=document.getElementById('target').value.trim(),amount=d.prices[selected];
+ if(!target)return showToast('لطفاً لینک یا آیدی مقصد را وارد کنید.');
+ if(!amount)return showToast('قیمت این سرویس هنوز تنظیم نشده است.');
+ try{
+  const r=await fetch(API+'/api/orders',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({service:current,target,quantity:qty})});
+  const data=await r.json();if(!r.ok)throw new Error(data.detail||'خطا در ثبت سفارش');
+  const orders=JSON.parse(localStorage.getItem('poriy_orders')||'[]');orders.unshift(data);localStorage.setItem('poriy_orders',JSON.stringify(orders));renderOrders();
+  if(data.pay_url)location.href=data.pay_url;else showToast('سفارش ثبت شد، اما لینک پرداخت دریافت نشد.');
+ }catch(e){showToast(e.message)}
+}
+function renderOrders(){
+ const a=JSON.parse(localStorage.getItem('poriy_orders')||'[]'),box=document.getElementById('ordersBox');
+ if(!a.length){box.innerHTML='<div class="orders-empty">هنوز سفارشی ثبت نکرده‌اید.</div>';return}
+ box.innerHTML=a.map(o=>`<div class="order"><strong>سفارش #${o.order_id||o.id||'—'}</strong><small>وضعیت: ${o.status||'در انتظار پرداخت'}</small><small>مبلغ: ${o.amount?money(o.amount):'—'}</small></div>`).join('');
+}
+function showToast(t){const x=document.getElementById('toast');x.textContent=t;x.style.display='block';clearTimeout(window.tt);window.tt=setTimeout(()=>x.style.display='none',3000)}
+function openDrawer(){document.getElementById('drawer').classList.add('open')}function closeDrawer(){document.getElementById('drawer').classList.remove('open')}
+renderOptions();renderOrders();
+</script>
+</body>
+</html>
