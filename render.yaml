@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: poriy-rubika
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: ADMIN_KEY
+        sync: false
+      - key: FRONTEND_ORIGIN
+        value: https://poriya1381.github.io
+      - key: CARD_HOLDER
+        sync: false
+      - key: CARD_NUMBER
+        sync: false
